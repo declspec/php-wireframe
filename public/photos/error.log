@@ -1,0 +1,20 @@
+[17-Feb-2016 14:46:32 Asia/Shanghai] PHP Parse error:  syntax error, unexpected ''/../app/application.php'' (T_CONSTANT_ENCAPSED_STRING) in /web/www/php-wireframe/public/photos/index.php on line 2
+[17-Feb-2016 14:46:36 Asia/Shanghai] PHP Warning:  require(/web/www/php-wireframe/public/photos/../app/application.php): failed to open stream: No such file or directory in /web/www/php-wireframe/public/photos/index.php on line 2
+[17-Feb-2016 14:46:36 Asia/Shanghai] PHP Fatal error:  require(): Failed opening required '/web/www/php-wireframe/public/photos/../app/application.php' (include_path='.:/usr/share/php:/usr/share/pear') in /web/www/php-wireframe/public/photos/index.php on line 2
+[17-Feb-2016 14:46:44 Asia/Shanghai] PHP Warning:  require(/app/application.php): failed to open stream: No such file or directory in /web/www/php-wireframe/public/photos/index.php on line 2
+[17-Feb-2016 14:46:44 Asia/Shanghai] PHP Fatal error:  require(): Failed opening required '/app/application.php' (include_path='.:/usr/share/php:/usr/share/pear') in /web/www/php-wireframe/public/photos/index.php on line 2
+[17-Feb-2016 14:47:19 Asia/Shanghai] PHP Warning:  require(/web/www/php-wireframe/public/app/application.php): failed to open stream: No such file or directory in /web/www/php-wireframe/public/photos/index.php on line 2
+[17-Feb-2016 14:47:19 Asia/Shanghai] PHP Fatal error:  require(): Failed opening required '/web/www/php-wireframe/public/app/application.php' (include_path='.:/usr/share/php:/usr/share/pear') in /web/www/php-wireframe/public/photos/index.php on line 2
+[17-Feb-2016 14:47:27 Asia/Shanghai] PHP Warning:  array_map(): An error occurred while invoking the map callback in /web/www/php-wireframe/app/vendor/php-di/injector.php on line 107
+[17-Feb-2016 14:47:27 Asia/Shanghai] PHP Fatal error:  Uncaught exception 'InvalidArgumentException' with message ''PhotoService' is not a valid class' in /web/www/php-wireframe/app/vendor/php-di/injector.php:45
+Stack trace:
+#0 /web/www/php-wireframe/app/vendor/php-di/factory.php(45): Injector->instantiate('PhotoService')
+#1 [internal function]: DependencyFactory->{closure}(Object(Injector))
+#2 /web/www/php-wireframe/app/vendor/php-di/injector.php(33): call_user_func_array(Object(Closure), Array)
+#3 /web/www/php-wireframe/app/vendor/php-di/dm.php(61): Injector->invoke(Array)
+#4 [internal function]: DependencyManager->{closure}('PhotoService', Object(Injector))
+#5 /web/www/php-wireframe/app/vendor/php-di/injector.php(72): call_user_func(Object(Closure), 'PhotoService', Object(Injector))
+#6 /web/www/php-wireframe/app/vendor/php-di/injector.php(106): Injector->get('PhotoService')
+#7 [internal function]: Injector->{closure}('PhotoService')
+#8 /web/www/php-wireframe/app/vendor/php-di/injector.php(107): array_map(Object(Closure), Array)
+#9 /web/www/php-wireframe/app/ve in /web/www/php-wireframe/app/vendor/php-di/injector.php on line 45
