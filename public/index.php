@@ -1,10 +1,17 @@
 <?php
 require($_SERVER['DOCUMENT_ROOT'] . '/../app/application.php');
 
-$app = Application::bootstrap("core", null, function($app, $controller) {
-    $pageController = $controller->create("PageController");
+$config = Application::configure("core.api", "dev");
+
+$app = Application::bootstrap("core.api", $config, function($app, $controller) {
+    $errorController = $controller->create("ErrorController");
     
-    $app->all("/", array($pageController, "home"));
+    $app->all("/", function() {
+        throw new Exception("Test Exception"); 
+    });
+
+    $app->all('*', array($errorController, "notFound"));
+    $app->error(array($errorController, "serverError"));
 });
 
 $app->run();
