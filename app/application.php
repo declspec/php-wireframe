@@ -4,11 +4,14 @@ require(__DIR__ . '/vendor/php-di/dm.php');
 require(__DIR__ . '/vendor/php-router/router.php');
 
 class Application extends Router {
+    const ANONYMOUS_MODULE = "__main__";
+    
     public function __construct($baseUrl=null) {
         parent::__construct($baseUrl);
     }
     
-    public static function bootstrap($appName, $config, callable $runFn=null) {
+    public static function bootstrap($appName, $env, callable $runFn=null) {
+        $config = self::configure($appName, $env);
         $app = new Application($config->baseUrl);
         
         // Create the dependency manager with a basic module resolver
@@ -20,26 +23,33 @@ class Application extends Router {
             
             call_user_func($fn, $manager);
         });
+        
+        // If $appName is an array of modules, create an anonymous parent module
+        // that references the modules as dependencies so we can still create a 
+        // centralized 'run' function. If $appName is a string then it should be the
+        // name of an already existing module.
+        $module = is_string($appName)
+            ? $dm->module($appName)
+            : $dm->module(self::ANONYMOUS_MODULE, $appName);
 
         // Attach the 'runFn' if one is provided.
         if ($runFn !== null) 
-            $dm->module($appName)->run($runFn);
+            $module->run($runFn);
 
         $dm->createInjector(array(function($provide) use(&$app, &$config) {
             $provide->constant("app", $app);
             $provide->constant("config", $config);
-        }, $appName));
+        }, $module->getName()));
         
         return $app;
     }
     
-    public static function configure($appName, $env) {
+    private static function configure($appName, $env) {
         $baseDirectory = __DIR__ . '/config';
 
-        $config = array_merge(
-            self::loadConfig($baseDirectory, $env), 
-            self::loadConfig($baseDirectory . '/' . $appName, $env)
-        );
+        $config = self::loadConfig($baseDirectory, $env);
+        if (is_string($appName))
+            $config = array_merge($config, self::loadConfig($baseDirectory . '/' . $appName, $env));
         
         if (!isset($config["env"]))
             $config["env"] = $env;

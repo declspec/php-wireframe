@@ -1,9 +1,7 @@
 <?php
 require($_SERVER['DOCUMENT_ROOT'] . '/../app/application.php');
 
-$config = Application::configure("core.api", "dev");
-
-$app = Application::bootstrap("core.api", $config, function($app, $controller) {
+$app = Application::bootstrap(array("core.api"), "dev", function($app, $controller) {
     $errorController = $controller->create("ErrorController");
     
     $app->all("/", function() {
