@@ -27,7 +27,8 @@ class DatabaseProvider {
 
 class DatabaseService {
     private static $DefaultOptions = array(
-        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
+        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
     );
     
     private $_connectionString;
@@ -42,7 +43,9 @@ class DatabaseService {
         $this->_connectionString = $connectionString;   
         $this->_username = $username;
         $this->_password = $password;   
-        $this->_options = array_merge(self::$DefaultOptions, $options === null ? array() : $options);       
+        $this->_options = $options === null
+            ? self::$DefaultOptions
+            : $options + self::$DefaultOptions;  
         
         $this->_connection = null;
     }
@@ -115,7 +118,7 @@ class DatabaseService {
         return $statement;
     }
     
-    private function bindStatement($statement, array $bindValues = null) {
+    private function bindStatement(&$statement, array $bindValues = null) {
         if ($bindValues === null)
             return;
         

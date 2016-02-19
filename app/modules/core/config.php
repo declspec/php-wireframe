@@ -10,6 +10,9 @@ return function($dm) {
         if ($dbConfig !== null) {
             $DatabaseProvider->setConnectionString($dbConfig["connectionString"]);
             $DatabaseProvider->setCredentials($dbConfig["username"], $dbConfig["password"]);
+            
+            if (isset($dbConfig["options"]))
+                $DatabaseProvider->setOptions($dbConfig["options"]);
         }
     });
    

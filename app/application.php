@@ -49,11 +49,11 @@ class Application extends Router {
 
         $config = self::loadConfig($baseDirectory, $env);
         if (is_string($appName))
-            $config = array_merge($config, self::loadConfig($baseDirectory . '/' . $appName, $env));
+            $config = array_replace_recursive($config, self::loadConfig($baseDirectory . '/' . $appName, $env));
         
         if (!isset($config["env"]))
             $config["env"] = $env;
-        
+
         return new Configuration($config);
     }
     
@@ -66,9 +66,9 @@ class Application extends Router {
             $default = array();
         
         if ($env) {
-            $envSpecific = @include($directory . '/' . strtolower($env));
+            $envSpecific = @include($directory . '/' . strtolower($env) . '.php');
             if (is_array($envSpecific))
-                $default = array_merge($default, $envSpecific);
+                $default = array_replace_recursive($default, $envSpecific);
         }
         
         return $default;
