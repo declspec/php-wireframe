@@ -1,7 +1,15 @@
 app/config/**/*.php
 !app/config/**/default.php
 
+# Asset ignores
+node_modules/
+.sass-cache/
+
+public/js/[0-9]*/*.js
+public/css/[0-9]*/*.css
+
 *.log
 *.tmp
 *.bin
+*.css.map
 

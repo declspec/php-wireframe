@@ -1,0 +1,40 @@
+[modal-dialog], .modal-dialog, .modal-dialog-shadow {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+}
+
+[modal-dialog], .modal-dialog {
+    z-index: 1000;
+}
+
+.modal-dialog-shadow {
+    z-index: 1000;
+    background-color: #111;// url('../Images/Overlay/stripes-dark.png') repeat 0 0;
+	// background: #fff url('../Images/Overlay/stripes-light.png') repeat 0 0;
+    opacity: 0.7;
+}
+
+.modal-dialog-wrapper {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	margin-top: -70px;
+	-webkit-transform: translate(-50%, -50%);
+	-ms-transform: translate(-50%, -50%);
+	transform: translate(-50%, -50%);
+    z-index: 1001;
+}
+
+.modal-dialog-cancel {
+    position: absolute;
+    right: -15px;
+    top: -15px;
+    width: 36px;
+    height: 36px;
+    display: block;
+    background: url('/images/close.png') no-repeat;
+    cursor: pointer;
+}
