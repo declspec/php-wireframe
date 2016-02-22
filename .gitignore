@@ -1,5 +1,5 @@
-app/config/*.php
-!app/config/default.php
+app/config/**/*.php
+!app/config/**/default.php
 
 *.log
 *.tmp
