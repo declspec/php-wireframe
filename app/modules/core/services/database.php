@@ -38,6 +38,7 @@ class DatabaseService {
     
     private $_connection;
     private $_statementCache;
+    private $_transactionDepth;
     
     public function __construct($connectionString, $username, $password, array $options=null) {
         $this->_connectionString = $connectionString;   
@@ -48,6 +49,7 @@ class DatabaseService {
             : $options + self::$DefaultOptions;  
         
         $this->_connection = null;
+        $this->_transactionDepth = 0;
     }
     
     /*
@@ -56,6 +58,28 @@ class DatabaseService {
             return call_user_func_array(array($this->_connection, $name), $args);
         throw new BadMethodCallException("Unknown method '$name'");
     }*/
+    
+    public function begin() {
+        if ($this->_transactionDepth === 0)
+            $this->acquire()->beginTransaction();
+        $this->_transactionDepth++;
+    }
+    
+    public function commit() {
+        if ($this->_transactionDepth > 0 && !--$this->_transactionDepth)
+            return $this->acquire()->commit();
+    }
+    
+    public function rollback() {
+        if ($this->_transactionDepth > 0) {
+            $this->_transactionDepth = 0;
+            return $this->acquire()->rollback();   
+        }   
+    }
+    
+    public function getLastInsertId() {
+        return $this->acquire()->lastInsertId();   
+    }
     
     public function query($sql, array $params=null, $emulatePrepare=true) {
         $statement = $this->createStatement($sql, $emulatePrepare);
@@ -73,7 +97,7 @@ class DatabaseService {
         $this->bindStatement($statement, $params);
         
         $statement->execute();
-        $nrows = $statement->rowCount;
+        $nrows = $statement->rowCount();
         $statement->closeCursor();
         
         return $nrows;
