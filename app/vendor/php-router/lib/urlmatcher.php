@@ -22,7 +22,7 @@ class UrlMatcher {
         return true;
     }
     
-    public static function create($path) {        
+    public static function create($path) {
         $path = trim($path, self::TRIM_CHARS);
         $length = strlen($path);
         $params = array();
