@@ -40,7 +40,7 @@ class DependencyManager {
     
     public function createInjector(array $modules) {
         if (!$modules) 
-            throw new InvalidArgumentException("Must specificy at least one module in order to create a dependency injector");
+            throw new InvalidArgumentException("Must specify at least one module in order to create a dependency injector");
         
         // Force load the core module into all injectors
         array_unshift($modules, "di");
@@ -51,7 +51,7 @@ class DependencyManager {
         });
         
         $instanceInjector = new Injector(function($name, $injector) use(&$providerInjector) {
-            $provider = $providerInjector->get($name.DependencyFactory::PROVIDER_SUFFIX);
+            $provider = $providerInjector->get($name . DependencyFactory::PROVIDER_SUFFIX);
             
             // If '_get' is a property of the class then invoke it as-is, otherwise invoke it as a class method
             $invokable = property_exists($provider, "_get")
@@ -78,7 +78,7 @@ class DependencyManager {
     private function loadModules(array $modules, IInjector $providerInjector, array &$cached=null) {
         if ($cached === null)
             $cached = array();
-            
+       
         $blocks = array();
         
         foreach($modules as $module) {
@@ -88,20 +88,27 @@ class DependencyManager {
                 $cached[$module] = true;
                 
                 $mod = $this->module($module);
-                $blocks = array_merge($blocks, $this->loadModules($mod->getDependencies(), $providerInjector, $cached), $mod->_runBlocks);
-                $this->runQueue($mod->_invokeQueue, $providerInjector);
-                $this->runQueue($mod->_configBlocks, $providerInjector);
+                $dependencies = $mod->getDependencies();
+                
+                if ($dependencies) {
+                    foreach($this->loadModules($dependencies, $providerInjector, $cached) as $block)
+                        $blocks[] = $block;
+                }
+                
+                if ($mod->_runBlocks)
+                    $blocks = array_merge($blocks, $mod->_runBlocks);
+                
+                foreach($mod->_invokeQueue as $args) {
+                    $obj = $providerInjector->get($args[0]);
+                    call_user_func(array($obj, $args[1]), $args[2], $args[3]); 
+                }
+                
+                foreach($mod->_configBlocks as $block) {
+                    $providerInjector->invoke($block);  
+                }
             }
         }
         
         return $blocks;
     }
-    
-    private function runQueue($queue, $injector) {
-        foreach($queue as $args) {
-            $obj = $injector->get($args[0]);
-            call_user_func_array(array($obj, $args[1]), $args[2]); 
-        }
-    }
-}
-?>
+};

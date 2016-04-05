@@ -5,7 +5,7 @@ $app = Application::bootstrap(array("core.api"), "dev", function($app, $controll
     $errorController = $controller->create("ErrorController");
     
     $app->all("/", function() {
-        throw new Exception("Test Exception"); 
+        echo "index.php";
     });
 
     $app->all('*', array($errorController, "notFound"));

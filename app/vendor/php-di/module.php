@@ -31,7 +31,7 @@ class Module implements IModule {
     }   
     
     public function config($configBlock) {
-        $this->_configBlocks[] = array("injector", "invoke", array($configBlock));
+        $this->_configBlocks[] = $configBlock;
         return $this;   
     }
     
@@ -41,27 +41,27 @@ class Module implements IModule {
     }
     
     public function provider($name, $provider) {
-        $this->_invokeQueue[] = array("provide", "provider", array($name, $provider));
+        $this->_invokeQueue[] = array("provide", "provider", $name, $provider);
         return $this;
     }
     
     public function factory($name, $factory) {
-        $this->_invokeQueue[] = array("provide", "factory", array($name, $factory));
+        $this->_invokeQueue[] = array("provide", "factory", $name, $factory);
         return $this;
     }
     
     public function service($name, $className=null) {
-        $this->_invokeQueue[] = array("provide", "service", array($name, $className));
+        $this->_invokeQueue[] = array("provide", "service", $name, $className);
         return $this;
     }
     
     public function constant($name, $value) {
-        array_unshift($this->_invokeQueue, array("provide", "constant", array($name, $value)));   
+        array_unshift($this->_invokeQueue, array("provide", "constant", $name, $value));   
         return $this;
     }
     
     public function controller($name, $className=null) {
-        $this->_invokeQueue[] = array("controllerProvider", "register", array($name, $className));
+        $this->_invokeQueue[] = array("controllerProvider", "register", $name, $className);
         return $this;   
     }
 };
