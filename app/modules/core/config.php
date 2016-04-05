@@ -1,4 +1,6 @@
 <?php
+// Make 'CheckedException' available everwhere
+require(__DIR__ . '/exceptions/checked.php');
 require(__DIR__ . '/services/database.php');
 
 return function($dm) {
@@ -17,5 +19,5 @@ return function($dm) {
     });
    
     // Database provider
-    $module->provider("Database", new DatabaseProvider());
+    $module->provider('Database', new DatabaseProvider());
 };
