@@ -1,6 +1,5 @@
 <?php
 class ApiService {
-
     public function wrapSuccess($data, $status=200) {
         return self::createResponse(true, $data, null, $status);   
     }
